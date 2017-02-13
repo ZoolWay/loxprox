@@ -18,8 +18,7 @@ let device = awsIot.device({
 
 device.on('connect', function() {
     console.log('connected');
-    device.subscribe('messages');
-    device.publish('devices', 'i am online');
+    device.subscribe(awsIotConfg.signalTopic);
 });
 
 device.on('disconnect', function() {
@@ -29,7 +28,7 @@ device.on('disconnect', function() {
 device.on('message', function(topic, payload) {
     console.log(`got message on topic '${topic}':`, payload.toString());
     try {
-        if (topic == 'messages') {
+        if (topic == awsIotConfg.signalTopic) {
             let data = JSON.parse(payload.toString());
             let signal = data.signal;
             if (signal) {

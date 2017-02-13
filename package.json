@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ZoolWay/loxprox/issues"
   },
-  "homepage": "https://github.com/ZoolWay/loxprox#readme"
+  "homepage": "https://github.com/ZoolWay/loxprox#readme",
+  "dependencies": {
+    "aws-iot-device-sdk": "^1.0.14"
+  }
 }

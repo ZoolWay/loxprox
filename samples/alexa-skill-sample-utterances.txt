@@ -1,0 +1,5 @@
+LightOn arbeitszimmer licht an
+LightOn arbeitslicht an
+
+LightOff arbeitszimmer licht aus
+LightOff arbeitslicht aus

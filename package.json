@@ -1,0 +1,19 @@
+{
+  "name": "loxprox",
+  "version": "1.0.0",
+  "description": "NodeJS-based proxy for AWS IOT calling WebServices (Loxone, e.g.) on LAN",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZoolWay/loxprox.git"
+  },
+  "author": "ZoolWay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ZoolWay/loxprox/issues"
+  },
+  "homepage": "https://github.com/ZoolWay/loxprox#readme"
+}

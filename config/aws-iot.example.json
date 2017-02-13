@@ -1,0 +1,7 @@
+{
+    "keyPath": "config/my-device.private.key",
+    "certPath": "config/my-device.cert.pem",
+    "caPath": "config/root-CA.crt",
+    "clientId": "my-device",
+    "region": "eu-central-1"
+}

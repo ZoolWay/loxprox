@@ -1,0 +1,4 @@
+{
+    "light-on": "http://192.168.0.11/dev/sps/io/Light-Living/On",
+    "light-off": "http://192.168.0.11/dev/sps/io/Light-Living/Off"
+}

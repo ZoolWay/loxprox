@@ -13,7 +13,8 @@ let device = awsIot.device({
     certPath: awsIotConfg.certPath,
     caPath: awsIotConfg.caPath,
     clientId: awsIotConfg.clientId,
-    region: awsIotConfg.region
+    region: awsIotConfg.region,
+    maximumReconnectTimeMs: 300000 // 300s = 5min
 });
 
 device.on('connect', function() {
@@ -21,8 +22,20 @@ device.on('connect', function() {
     device.subscribe(awsIotConfg.signalTopic);
 });
 
-device.on('disconnect', function() {
-    console.log('diconnected');
+device.on('reconnect', function() {
+    console.log('reconnected');
+});
+
+device.on('close', function() {
+    console.log('connection closed');
+});
+
+device.on('offline', function() {
+    console.log('offline');
+});
+
+device.on('error', function() {
+    console.error('cannot connect');
 });
 
 device.on('message', function(topic, payload) {

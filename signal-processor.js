@@ -4,20 +4,22 @@ let http = require('http');
 
 class SignalProcessor {
 
-    constructor(configFilename) {
+    constructor(configFilename, winston) {
         this.messagesConfig = {};
         this.configFilename = configFilename;
+        this.winston = winston;
     }
 
     init() {
-        this.messagesConfig = JSON.parse(fs.readFileSync('./config/messages.json', 'UTF-8'));
+        this.messagesConfig = JSON.parse(fs.readFileSync(this.configFilename, 'UTF-8'));
+        this.winston.info(`Initialized with ${Object.keys(this.messagesConfig).length} signals from configuration file`);
     }
 
     process(signal) {
         if (this.messagesConfig[signal]) {
             let mUrl = this.messagesConfig[signal];
             let parsedUrl = url.parse(mUrl);
-            console.log(`Signal '${signal}' triggers: ${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.path}`);
+            this.winston.verbose(`Signal '${signal}' triggers: ${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.path}`);
             let options = {
                 host: parsedUrl.host,
                 port: parsedUrl.port,
@@ -25,13 +27,14 @@ class SignalProcessor {
                 auth: parsedUrl.auth,
                 method: 'GET'
             };
-            console.log('starting request');
+            this.winston.debug('starting request');
+            var me = this;
             var request = http.request(options, function (response) {
-                console.log('response status code:', response.statusCode);
+                me.winston.debug('response status code:', response.statusCode);
             });
             request.end();
         } else {
-            console.log('No URL configured for signal');
+            this.winston.warn('No URL configured for signal');
         }
     }
 

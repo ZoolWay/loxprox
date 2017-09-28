@@ -1,10 +1,11 @@
 let awsIot = require('aws-iot-device-sdk');
 let fs = require('fs');
 let sp = require('./signal-processor.js');
+let tools = require('./tools');
 
 let awsIotConfg = JSON.parse(fs.readFileSync('./config/aws-iot.json', 'UTF-8'));
 
-console.log('starting loxprox \\o/', sp);
+console.log('starting loxprox \\o/');
 
 let signalProcessor = new sp.SignalProcessor('./config/messages.json');
 signalProcessor.init();
@@ -54,7 +55,9 @@ device.on('message', function (topic, payload) {
             if (data.command) {
                 if (data.command == 'marco') {
                     device.publish(awsIotConfg.signalTopic, JSON.stringify({
-                        command: 'polo'
+                        command: 'polo',
+                        localNetwork: tools.getIpAddresses(),
+                        version: 1
                     }));
                 }
                 performedAnything = true;

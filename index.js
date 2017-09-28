@@ -1,12 +1,13 @@
 let awsIot = require('aws-iot-device-sdk');
 let fs = require('fs');
-let url = require('url');
-let http = require('http');
+let sp = require('./signal-processor.js');
 
 let awsIotConfg = JSON.parse(fs.readFileSync('./config/aws-iot.json', 'UTF-8'));
-let messagesConfig = JSON.parse(fs.readFileSync('./config/messages.json', 'UTF-8'));
 
-console.log('starting loxprox \\o/');
+console.log('starting loxprox \\o/', sp);
+
+let signalProcessor = new sp.SignalProcessor('./config/messages.json');
+signalProcessor.init();
 
 let device = awsIot.device({
     keyPath: awsIotConfg.keyPath,
@@ -17,55 +18,50 @@ let device = awsIot.device({
     maximumReconnectTimeMs: 300000 // 300s = 5min
 });
 
-device.on('connect', function() {
+device.on('connect', function () {
     console.log('connected');
     device.subscribe(awsIotConfg.signalTopic);
 });
 
-device.on('reconnect', function() {
+device.on('reconnect', function () {
     console.log('reconnected');
 });
 
-device.on('close', function() {
+device.on('close', function () {
     console.log('connection closed');
 });
 
-device.on('offline', function() {
+device.on('offline', function () {
     console.log('offline');
 });
 
-device.on('error', function() {
+device.on('error', function () {
     console.error('cannot connect');
 });
 
-device.on('message', function(topic, payload) {
+device.on('message', function (topic, payload) {
     console.log(`got message on topic '${topic}':`, payload.toString());
     try {
         if (topic == awsIotConfg.signalTopic) {
+            let performedAnything = false;
             let data = JSON.parse(payload.toString());
-            let signal = data.signal;
-            if (signal) {
-                if (messagesConfig[signal]) {
-                    let mUrl = messagesConfig[signal];
-                    let parsedUrl = url.parse(mUrl);
-                    console.log(`configured URL for signal '${signal}': ${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.path}`);
-                    let options = {
-                        host: parsedUrl.host,
-                        port: parsedUrl.port,
-                        path: parsedUrl.path,
-                        auth: parsedUrl.auth,
-                        method: 'GET'
-                    };
-                    console.log('starting request');
-                    var request = http.request(options, function(response) {
-                        console.log('response status code:', response.statusCode);
-                    });
-                    request.end();
-                } else {
-                    console.log('No URL configured for signal');
+
+            if (data.signal) {
+                signalProcessor.process(data.signal);
+                performedAnything = true;
+            }
+
+            if (data.command) {
+                if (data.command == 'marco') {
+                    device.publish(awsIotConfg.signalTopic, JSON.stringify({
+                        command: 'polo'
+                    }));
                 }
-            } else {
-                console.log('message contains no signal');
+                performedAnything = true;
+            }
+
+            if (!performedAnything) {
+                console.log('message contains no signal and no command');
             }
         }
     } catch (err) {

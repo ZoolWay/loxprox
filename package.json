@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ZoolWay/loxprox#readme",
   "dependencies": {
-    "aws-iot-device-sdk": "^1.0.14"
+    "aws-iot-device-sdk": "^1.0.14",
+    "winston": "^2.3.1"
   }
 }

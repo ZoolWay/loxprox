@@ -3,7 +3,7 @@
 > NodeJS-based proxy for AWS IoT calling WebServices (Loxone, e.g.) on LAN
 
 Loxprox is a simple NodeJS based application which will connect itself as an
-AWS IoT device to your AWS IoT hub. Its purpose is to receive configureable
+AWS IoT device to your AWS IoT hub. Its purpose is to receive configurable
 message signals which trigger simple HTTP GET calls in the network loxprox
 is running on.
 
